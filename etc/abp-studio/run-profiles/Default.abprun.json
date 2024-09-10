@@ -1,0 +1,17 @@
+﻿{
+  "applications": {
+    "Acme.BookStore.HttpApi.Host": {
+      "type": "dotnet-project",
+      "launchUrl": "https://localhost:44350",
+      "path": "../../../src/Acme.BookStore.HttpApi.Host/Acme.BookStore.HttpApi.Host.csproj",
+      "kubernetesService": ".*-httpapihost$"  
+    },
+    "Acme.BookStore.Angular": {
+      "type": "cli",
+      "workingDirectory": "../../../angular",
+      "startCommand": "./start.ps1",
+      "launchUrl": "http://localhost:4200",
+      "kubernetesService": ".*-angular$"        
+    }
+  }
+}
