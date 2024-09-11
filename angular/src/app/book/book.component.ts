@@ -32,13 +32,13 @@ export class BookComponent implements OnInit {
     private fb: FormBuilder,
     private confirmation: ConfirmationService
   ) {
-    this.authors$ = bookService.getAuthorLookup().pipe(map((r) => r.items));
+    this.authors$ = bookService.getAuthorLookup().pipe(map(r => r.items));
   }
 
   ngOnInit() {
-    const bookStreamCreator = (query) => this.bookService.getList(query);
+    const bookStreamCreator = query => this.bookService.getList(query);
 
-    this.list.hookToQuery(bookStreamCreator).subscribe((response) => {
+    this.list.hookToQuery(bookStreamCreator).subscribe(response => {
       this.book = response;
     });
   }
@@ -50,7 +50,7 @@ export class BookComponent implements OnInit {
   }
 
   editBook(id: string) {
-    this.bookService.get(id).subscribe((book) => {
+    this.bookService.get(id).subscribe(book => {
       this.selectedBook = book;
       this.buildForm();
       this.isModalOpen = true;
@@ -87,7 +87,7 @@ export class BookComponent implements OnInit {
   }
 
   delete(id: string) {
-    this.confirmation.warn('::AreYouSureToDelete', 'AbpAccount::AreYouSure').subscribe((status) => {
+    this.confirmation.warn('::AreYouSureToDelete', 'AbpAccount::AreYouSure').subscribe(status => {
       if (status === Confirmation.Status.confirm) {
         this.bookService.delete(id).subscribe(() => this.list.get());
       }
