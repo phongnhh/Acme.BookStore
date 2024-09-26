@@ -38,6 +38,8 @@ using Volo.Abp.OpenIddict;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.Studio.Client.AspNetCore;
 using Volo.Abp.Security.Claims;
+using Volo.Abp.BlobStoring.Minio;
+using Volo.Abp.BlobStoring;
 
 namespace Acme.BookStore;
 
@@ -51,7 +53,8 @@ namespace Acme.BookStore;
     typeof(BookStoreEntityFrameworkCoreModule),
     typeof(AbpAccountWebOpenIddictModule),
     typeof(AbpSwashbuckleModule),
-    typeof(AbpAspNetCoreSerilogModule)
+    typeof(AbpAspNetCoreSerilogModule),
+    typeof(AbpBlobStoringMinioModule)
     )]
 public class BookStoreHttpApiHostModule : AbpModule
 {
@@ -110,6 +113,21 @@ public class BookStoreHttpApiHostModule : AbpModule
         ConfigureSwagger(context, configuration);
         ConfigureVirtualFileSystem(context);
         ConfigureCors(context, configuration);
+
+        Configure<AbpBlobStoringOptions>(options =>
+        {
+            options.Containers.ConfigureDefault(container =>
+            {
+                container.IsMultiTenant = false;
+                container.UseMinio(minio =>
+                {
+                    minio.EndPoint = "192.168.1.199:9000";
+                    minio.AccessKey = "B259ZzWYkziK6PyC8LVw";
+                    minio.SecretKey = "VbkG37b6dwAouxW5Lel374VRFVaBmgdSI8b3KKTX";
+                    minio.BucketName = "abpuploadfile";
+                });
+            });
+        });
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)

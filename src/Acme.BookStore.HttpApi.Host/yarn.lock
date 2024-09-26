@@ -3,9 +3,9 @@
 
 
 "@abp/aspnetcore.mvc.ui.theme.leptonxlite@~3.2.2":
-  version "3.2.3"
-  resolved "https://registry.npmjs.org/@abp/aspnetcore.mvc.ui.theme.leptonxlite/-/aspnetcore.mvc.ui.theme.leptonxlite-3.2.3.tgz"
-  integrity sha512-2GInMeI8idAX2pLqm43Ci9UOayyNw39j4TIHCBcKLsUyNnR09ehRmfpU57+WXYFHCcLqtqxnO0jAAnEoWAaAQQ==
+  version "3.2.4"
+  resolved "https://registry.npmjs.org/@abp/aspnetcore.mvc.ui.theme.leptonxlite/-/aspnetcore.mvc.ui.theme.leptonxlite-3.2.4.tgz"
+  integrity sha512-CIS3cHwCYZ1vE+jaJuRtnZCVtCwdEA+s13AuJ2F4JrKyD1OI+4r7eKXU9xZZcXIYjHTvPHwea4gXM1TqEf4Erw==
   dependencies:
     "@abp/aspnetcore.mvc.ui.theme.shared" "~8.2.3"
 

@@ -1,6 +1,7 @@
 using AutoMapper;
 using Acme.BookStore.Books;
 using Acme.BookStore.Authors;
+using Acme.BookStore.Documents;
 
 namespace Acme.BookStore;
 
@@ -13,6 +14,8 @@ public class BookStoreApplicationAutoMapperProfile : Profile
 
         CreateMap<Author, AuthorDto>();
         CreateMap<Author, AuthorLookupDto>();
+
+        CreateMap<Document, DocumentDto>().ReverseMap();
 
         /* You can configure your AutoMapper mapping configuration here.
          * Alternatively, you can split your mapping configurations

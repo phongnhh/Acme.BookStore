@@ -24,19 +24,19 @@ function configureRoutes(routes: RoutesService) {
         requiredPolicy: 'BookStore.Books || BookStore.Authors',
       },
       {
-        path: '/books',
-        name: '::Menu:Books',
-        iconClass: 'fas fa-book',
-        layout: eLayoutType.application,
-        requiredPolicy: 'BookStore.Books',
-      },
-      {
         path: '/authors',
         name: '::Menu:Authors',
         parentName: '::Menu:BookStore',
         layout: eLayoutType.application,
         requiredPolicy: 'BookStore.Authors',
-      }      
+      },
+      {
+        path: '/books',
+        name: '::Menu:Books',
+        parentName: '::Menu:BookStore',
+        layout: eLayoutType.application,
+        requiredPolicy: 'BookStore.Books',
+      }
     ]);
   };
 }
