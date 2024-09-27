@@ -27,7 +27,7 @@ namespace Acme.BookStore.Documents
                 using var memoryStream = new MemoryStream();
                 await file.CopyToAsync(memoryStream).ConfigureAwait(false);
                 var id = Guid.NewGuid();
-                var newFile = new Document(id, file.Length, file.ContentType, CurrentTenant.Id);
+                var newFile = new Document(id, file.FileName, file.Length, file.ContentType, CurrentTenant.Id);
                 var created = await _repository.InsertAsync(newFile);
                 try
                 {
@@ -66,7 +66,7 @@ namespace Acme.BookStore.Documents
                 if (fileBytes != null)
                 {
                     // Tạo tệp mới với tên mới
-                    var newFile = new Document(newId, currentFile.FileSize, currentFile.MimeType, currentFile.TenantId);
+                    var newFile = new Document(newId, currentFile.FileName, currentFile.FileSize, currentFile.MimeType, currentFile.TenantId);
                     var created = await _repository.InsertAsync(newFile);
                     await _blobContainer.SaveAsync(newId.ToString(), fileBytes, true);
 
