@@ -121,10 +121,11 @@ public class BookStoreHttpApiHostModule : AbpModule
                 container.IsMultiTenant = false;
                 container.UseMinio(minio =>
                 {
-                    minio.EndPoint = "192.168.1.199:9000";
-                    minio.AccessKey = "B259ZzWYkziK6PyC8LVw";
-                    minio.SecretKey = "VbkG37b6dwAouxW5Lel374VRFVaBmgdSI8b3KKTX";
+                    minio.EndPoint = "172.22.31.232:9000";
+                    minio.AccessKey = "M7cjkJHTJODJvgLx4GfQ";
+                    minio.SecretKey = "PY4I3iHJXhpfPG9O8GyG03zA0MAOYUR6XwTPkqhe";
                     minio.BucketName = "abpuploadfile";
+                    minio.CreateBucketIfNotExists = true;
                 });
             });
         });
