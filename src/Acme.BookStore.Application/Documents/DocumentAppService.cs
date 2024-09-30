@@ -31,7 +31,7 @@ namespace Acme.BookStore.Documents
                 var created = await _repository.InsertAsync(newFile);
                 try
                 {
-                    await _blobContainer.SaveAsync(id.ToString(), memoryStream.ToArray(), overrideExisting: true).ConfigureAwait(false);
+                    await _blobContainer.SaveAsync(file.FileName, memoryStream.ToArray(), overrideExisting: true).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -43,36 +43,48 @@ namespace Acme.BookStore.Documents
             return output;
         }
 
-        public async Task<FileResult> Get(Guid id)
+        public async Task<FileResult> Download(string fileName)
         {
-            var currentFile = await _repository.FirstOrDefaultAsync(x => x.Id == id);
+            var currentFile = await _repository.FirstOrDefaultAsync(x => x.FileName.Equals(fileName));
             if (currentFile != null)
             {
-                var myfile = await _blobContainer.GetAllBytesOrNullAsync(id.ToString());
+                var myfile = await _blobContainer.GetAllBytesOrNullAsync(currentFile.FileName);
                 return new FileContentResult(myfile, currentFile.MimeType);
             }
 
             throw new FileNotFoundException();
         }
 
-        public async Task<bool> Rename(Guid oldId, Guid newId)
+        public async Task<FileResult> Get(Guid id)
         {
-            // Lấy tệp cũ từ blob container
-            var currentFile = await _repository.FirstOrDefaultAsync(x => x.Id == oldId);
+            var currentFile = await _repository.FirstOrDefaultAsync(x => x.Id == id);
             if (currentFile != null)
             {
-                var fileBytes = await _blobContainer.GetAllBytesOrNullAsync(oldId.ToString());
+                var myfile = await _blobContainer.GetAllBytesOrNullAsync(currentFile.FileName);
+                return new FileContentResult(myfile, currentFile.MimeType);
+            }
+
+            throw new FileNotFoundException();
+        }
+
+        public async Task<bool> Rename(string oldFilePath, string newFilePath)
+        {
+            // Lấy tệp cũ từ blob container
+            var currentFile = await _repository.FirstOrDefaultAsync(x => x.FileName.Equals(oldFilePath));
+            if (currentFile != null)
+            {
+                var fileBytes = await _blobContainer.GetAllBytesOrNullAsync(oldFilePath);
 
                 if (fileBytes != null)
                 {
                     // Tạo tệp mới với tên mới
-                    var newFile = new Document(newId, currentFile.FileName, currentFile.FileSize, currentFile.MimeType, currentFile.TenantId);
+                    var newFile = new Document(Guid.NewGuid(), newFilePath, currentFile.FileSize, currentFile.MimeType, currentFile.TenantId);
                     var created = await _repository.InsertAsync(newFile);
-                    await _blobContainer.SaveAsync(newId.ToString(), fileBytes, true);
+                    await _blobContainer.SaveAsync(newFilePath, fileBytes, true);
 
                     // Xóa tệp cũ
-                    var result = await _blobContainer.DeleteAsync(oldId.ToString());
-                    await _blobContainer.DeleteAsync(oldId.ToString());
+                    var result = await _blobContainer.DeleteAsync(oldFilePath);
+                    await _repository.DeleteAsync(x => x.Id == currentFile.Id);
                     return true;
                 }
             }
@@ -85,7 +97,7 @@ namespace Acme.BookStore.Documents
             var currentFile = await _repository.FirstOrDefaultAsync(x => x.Id == id);
             if (currentFile != null)
             {
-                var result = await _blobContainer.DeleteAsync(id.ToString());
+                var result = await _blobContainer.DeleteAsync(currentFile.FileName);
                 if (result)
                     await _repository.DeleteAsync(x => x.Id == id);
                 return result;
@@ -94,13 +106,13 @@ namespace Acme.BookStore.Documents
             throw new FileNotFoundException();
         }
 
-        public async Task<long> GetSize(Guid id)
+        public async Task<long> Size(Guid id)
         {
             var currentFile = await _repository.FirstOrDefaultAsync(x => x.Id == id);
             if (currentFile != null)
             {
-                var myfile = await _blobContainer.GetAllBytesOrNullAsync(id.ToString());
-                return myfile.Length;
+                var myfile = await _blobContainer.GetAllBytesOrNullAsync(currentFile.FileName);
+                return myfile!.Length;
             }
 
             throw new FileNotFoundException();

@@ -184,8 +184,9 @@ namespace Acme.BookStore.Controllers.Files
         }
 
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadFile(IFormFile file)
+        public async Task<bool> UploadFile(IFormFile file)
         {
+            bool result = false;
             try
             {
                 SMB2Client client = new SMB2Client();
@@ -213,6 +214,7 @@ namespace Acme.BookStore.Controllers.Files
                             {
                                 throw new Exception("Failed to write to file");
                             }
+                            result = true;
                             status = fileStore.CloseFile(fileHandle);
                         }
                         status = fileStore.Disconnect();
@@ -227,7 +229,7 @@ namespace Acme.BookStore.Controllers.Files
             {
             }
 
-            return Ok();
+            return result;
         }
 
         private static async Task<byte[]> ConvertToByteArray(IFormFile file)
